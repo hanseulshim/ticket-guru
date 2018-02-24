@@ -7,12 +7,12 @@ class TicketContainer extends Component {
   }
   render() { 
     return ( 
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <p class="title">
+      <div className="hero-body">
+        <div className="container has-text-centered">
+          <p className="title">
             Title
           </p>
-          <p class="subtitle">
+          <p className="subtitle">
             Subtitle
           </p>
         </div>

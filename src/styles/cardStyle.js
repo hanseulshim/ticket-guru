@@ -4,14 +4,20 @@ const styles = {
     flexWrap: 'wrap'
   },
   card: {
-    width: '500px',
-    margin: '1rem',
+    flex: '1',
+    width: '100%',
+    minWidth: '400px',
+    maxWidth: '800px',
+    margin: '.5rem',
     padding: '1rem',
     background: '#c9d8c5'
   },
   selectedCard: {
-    width: '500px',
-    margin: '1rem',
+    flex: '1',
+    width: '100%',
+    minWidth: '400px',
+    maxWidth: '800px',
+    margin: '.5rem',
     padding: '1rem',
     background: '#b3c2bf'
   },
@@ -32,6 +38,11 @@ const styles = {
   sectionContent: {
     margin: '1rem 0',
     color: '#3b3a36',
+    textDecoration: 'none'
+  },
+  sectionURL: {
+    margin: '1rem 0',
+    color: '#9068be',
     textDecoration: 'none'
   }
 }

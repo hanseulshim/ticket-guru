@@ -9,6 +9,12 @@ const styles = {
     padding: '1rem',
     background: '#c9d8c5'
   },
+  selectedCard: {
+    width: '500px',
+    margin: '1rem',
+    padding: '1rem',
+    background: '#b3c2bf'
+  },
   title: {
     margin: '1rem 0 1.5rem 0',
     color: '#3b3a36',

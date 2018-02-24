@@ -7,8 +7,9 @@ import styles from '../../styles/venuesContainerStyle';
 class VenuesContainer extends Component {
 
   createCards = (venue, id) => {
+    const selected = this.props.selectedVenueID === venue.id;
     return (
-      <Card style={cardStyles.card} key={id}>
+      <Card style={selected ? cardStyles.selectedCard : cardStyles.card} key={id}>
         <CardContent>
           <div style={cardStyles.title}>
             {venue.name}
@@ -27,7 +28,7 @@ class VenuesContainer extends Component {
           </div>
         </CardContent>
         <CardActions>
-          <Button style={cardStyles.button} onClick={() => this.props.selectVenue(venue.id)} size="small">Select Venue</Button>
+          <Button style={cardStyles.button} onClick={() => this.props.selectVenue(venue.id)} size="small">{`${selected ? 'Unselect Venue' : 'Select Venue'}`}</Button>
         </CardActions>
       </Card>
     )

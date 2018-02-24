@@ -13,7 +13,7 @@ class TicketContainer extends Component {
   selectVenue = (id) => {
     const tempVenues = this.props.venues.slice();
     const index = tempVenues.findIndex(venue => venue.id === id);
-    const selectedVenue = index !== -1 ? tempVenues[index] : {};
+    const selectedVenue = (index !== -1 && id !== this.state.selectedVenue.id) ? tempVenues[index] : {};
     this.setState({ selectedVenue });
   }
 
@@ -22,7 +22,7 @@ class TicketContainer extends Component {
     const { selectedVenue } = this.state;
     return ( 
       <div style={ticketContainerStyle}>
-        <VenuesContainer venues={venues} selectedVenue={selectedVenue} selectVenue={this.selectVenue}/>
+        <VenuesContainer venues={venues} selectedVenueID={selectedVenue.id} selectVenue={this.selectVenue}/>
       </div>
     )
   }

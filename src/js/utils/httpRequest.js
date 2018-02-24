@@ -3,12 +3,13 @@ const fetchJSON = (url, method, send) => {
     const request = new XMLHttpRequest();
       request.onload = () => {
         if (request.responseText === ''){
-          reject('Request Failed');
+          reject('No response');
         } else {
           resolve(request.responseText);
         }
       };
       request.onerror = err => {
+        reject('Error grabbing objects');
         console.log(`Error: ${err}`);
       };
       request.open(method, url, true);

@@ -1,18 +1,8 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import style from '../../styles/headerStyle';
 
-const styles = theme => ({
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  }
-});
-
 const Header = (props) => {
-  const { classes } = props;
   
   return (
     <div style={style}>
@@ -26,10 +16,9 @@ const Header = (props) => {
         label="Search for a venue"
         type="search"
         // onChange={this.handleChange}
-        className={classes.textField}
       />
     </div>
   );
 }
 
-export default withStyles(styles)(Header);
+export default Header;

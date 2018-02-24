@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
+import VenuesContainer from './VenuesContainer'
+import { ticketContainerStyle } from '../../styles/ticketContainerStyle';
 
 class TicketContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {  }
+    this.state = { 
+      selectedVenue: {}
+    }
   }
-  render() { 
+
+  selectVenue = (id) => {
+    const tempVenues = this.props.venues.slice();
+    const index = tempVenues.findIndex(venue => venue.id === id);
+    const selectedVenue = index !== -1 ? tempVenues[index] : {};
+    this.setState({ selectedVenue });
+  }
+
+  render() {
+    const { venues } = this.props;
+    const { selectedVenue } = this.state;
     return ( 
-      <div className="hero-body">
-        <div className="container has-text-centered">
-          <p className="title">
-            Title
-          </p>
-          <p className="subtitle">
-            Subtitle
-          </p>
-        </div>
+      <div style={ticketContainerStyle}>
+        <VenuesContainer venues={venues} selectedVenue={selectedVenue} selectVenue={this.selectVenue}/>
       </div>
     )
   }

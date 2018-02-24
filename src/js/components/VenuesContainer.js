@@ -24,7 +24,7 @@ class VenuesContainer extends Component {
           </div>
           <div>
             <div style={cardStyles.sectionTitle}>URL</div>
-            <a style={cardStyles.sectionContent} href={venue.url} target='_blank'>{venue.url}</a>
+            <a style={cardStyles.sectionURL} href={venue.url} target='_blank'>{venue.url}</a>
           </div>
         </CardContent>
         <CardActions>

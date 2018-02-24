@@ -36,7 +36,7 @@ class VenuesContainer extends Component {
   render() {
     const { venues } = this.props;
     const venueList = venues.map(this.createCards);
-    console.log('props', this.props);
+
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>

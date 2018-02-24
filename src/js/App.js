@@ -18,10 +18,10 @@ class App extends Component {
   componentDidMount() {
     httpRequest.fetchJSON(config.venuesUrl, 'GET')
     .then(response => {
-      const result = JSON.parse(response);
+      const venues = JSON.parse(response);
       this.setState({ 
-        venues: result,
-        filteredVenues: result
+        venues: venues,
+        filteredVenues: venues
       });
     })
     .catch(err => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import 'bulma/css/bulma.css'
 import Header from './components/Header';
+import CustomerContainer from './components/CustomerContainer';
 import TicketContainer from './components/TicketContainer';
 
 import config from './config/config';
@@ -11,21 +12,25 @@ class App extends Component {
     super(props);
     this.state = { 
       venues: [],
-      filteredVenues: []
+      filteredVenues: [],
+      customers: [],
+      selectedCustomer: {}
     }
   }
 
   componentDidMount() {
-    httpRequest.fetchJSON(config.venuesUrl, 'GET')
-    .then(response => {
-      const venues = JSON.parse(response);
+    Promise.all([httpRequest.fetchJSON(config.venuesUrl, 'GET'), httpRequest.fetchJSON(config.customerUrl, 'GET')])
+    .then(responses => {
+      const venues = JSON.parse(responses[0]);
+      const customers = JSON.parse(responses[1]);
       this.setState({ 
         venues: venues,
-        filteredVenues: venues
+        filteredVenues: venues,
+        customers: customers
       });
     })
     .catch(err => {
-      console.log('Error in grabbing initial venues', err);
+      console.log('Error in grabbing initial request', err);
     })
   }
 
@@ -35,13 +40,20 @@ class App extends Component {
     this.setState({ filteredVenues });
   }
 
+  selectCustomer = (selectedCustomer) => {
+    const customerIndex = this.state.customers.findIndex(customer => customer.id === selectedCustomer.value);
+    const customer = customerIndex !== -1 ? this.state.customers[customerIndex] : {}
+    this.setState({ selectedCustomer: customer });
+  }
+
   render() {
-    const { venues, filteredVenues } = this.state;
+    const { venues, filteredVenues, customers, selectedCustomer } = this.state;
     return (
       <div className="App">
         <div>
           <Header venues={venues} filterVenues={this.filterVenues}/>
-          <TicketContainer venues={filteredVenues} />
+          <CustomerContainer selectCustomer={this.selectCustomer} selectedCustomer={selectedCustomer} customers={customers}/>
+          <TicketContainer venues={filteredVenues} selectedCustomer={selectedCustomer}/>
         </div>
       </div>
     );

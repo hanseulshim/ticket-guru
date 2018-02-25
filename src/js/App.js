@@ -40,7 +40,7 @@ class App extends Component {
   }
 
   selectCustomer = (selectedCustomer) => {
-    const customerIndex = this.state.customers.findIndex(customer => customer.id === selectedCustomer.value);
+    const customerIndex = selectedCustomer === null ? -1 : this.state.customers.findIndex(customer => customer.id === selectedCustomer.value);
     const customer = customerIndex !== -1 ? this.state.customers[customerIndex] : {}
     this.setState({ selectedCustomer: customer });
   }

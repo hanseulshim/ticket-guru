@@ -7,8 +7,6 @@ import '../../styles/react-select.css';
 class PerformancesContainer extends Component {
   createPerformanceList = (performance) => {
     const date = new Date(performance.showTime);
-    window.date = date;
-    console.log('date', date);
     return {
       value: performance.id,
       label: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} at ${date.toLocaleTimeString('en-US')}`

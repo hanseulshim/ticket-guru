@@ -3,6 +3,7 @@ import VenuesContainer from './VenuesContainer';
 import ShowsContainer from './ShowsContainer';
 import PerformancesContainer from './PerformancesContainer';
 import LevelsContainer from './LevelsContainer';
+import SeatsContainer from './SeatsContainer';
 import config from '../config/config';
 import httpRequest from '../utils/httpRequest';
 import { ticketContainerStyle } from '../../styles/ticketContainerStyle';
@@ -13,8 +14,8 @@ class TicketContainer extends Component {
     this.state = { 
       selectedVenue: {},
       selectedShow: {},
-      selectedPerformance: {},
-      selectedLevel: {}
+      selectedLevel: {},
+      selectedPerformance: {}
     }
   }
 
@@ -26,14 +27,22 @@ class TicketContainer extends Component {
       .then(response => {
         const venue = JSON.parse(response);
         this.setState({ 
-          selectedVenue: venue
+          selectedVenue: venue,
+          selectedShow: {},
+          selectedLevel: {},
+          selectedPerformance: {}
         });
       })
       .catch(err => {
         console.log('Error in grabbing selected Venue', err);
       })
     } else {
-      this.setState({ selectedVenue: {} });
+      this.setState({ 
+        selectedVenue: {},
+        selectedShow: {},
+        selectedLevel: {},
+        selectedPerformance: {}
+      });
     }
   }
 
@@ -45,14 +54,20 @@ class TicketContainer extends Component {
       .then(response => {
         const show = JSON.parse(response);
         this.setState({ 
-          selectedShow: show
+          selectedShow: show,
+          selectedLevel: {},
+          selectedPerformance: {}
         });
       })
       .catch(err => {
         console.log('Error in grabbing selected Show', err);
-      })
+      });
     } else {
-      this.setState({ selectedShow: {} });
+      this.setState({ 
+        selectedShow: {},
+        selectedLevel: {},
+        selectedPerformance: {}
+      });
     }
   }
 
@@ -60,6 +75,20 @@ class TicketContainer extends Component {
     const tempLevels = this.state.selectedVenue.levels.slice();
     const index = tempLevels.findIndex(level => level.id === id);
     if (index !== -1 && id !== this.state.selectedLevel.id ) {
+      if (this.state.selectedPerformance.id) {
+        httpRequest.fetchJSON(`${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${this.state.selectedPerformance.id}/availability?levelName=${tempLevels[index].name}`, 'GET')
+        .then(response => {
+          const seatsAvailable = JSON.parse(response);
+          const performance = Object.assign({}, this.state.selectedPerformance);
+          performance.seatsAvailable = seatsAvailable;
+          this.setState({ 
+            selectedPerformance: performance
+          });
+        })
+        .catch(err => {
+          console.log('Error in grabbing Available Seats', err);
+        })
+      }
       this.setState({ 
         selectedLevel: tempLevels[index]
       });
@@ -69,50 +98,68 @@ class TicketContainer extends Component {
   }
 
   selectPerformance = (selectedPerformance) => {
-    const performanceIndex = this.state.selectedShow.performances.findIndex(performance => performance.id === selectedPerformance.value);
-    const performance = performanceIndex !== -1 ? this.state.selectedShow.performances[performanceIndex] : {}
-    this.setState({ selectedPerformance: performance });
+    const index = selectedPerformance === null ? -1 : this.state.selectedShow.performances.findIndex(performance => performance.id === selectedPerformance.value);
+    if (index !== -1) {
+      httpRequest.fetchJSON(`${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${selectedPerformance.value}`, 'GET')
+      .then(response => {
+        const performance = JSON.parse(response);
+        if (this.state.selectedLevel.id) {
+          httpRequest.fetchJSON(`${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${selectedPerformance.value}/availability?levelName=${this.state.selectedLevel.name}`, 'GET')
+          .then(response => {
+            const seatsAvailable = JSON.parse(response);
+            performance.seatsAvailable = seatsAvailable;
+            this.setState({ 
+              selectedPerformance: performance
+            });
+          })
+          .catch(err => {
+            console.log('Error in grabbing Available Seats', err);
+          })
+        } else {
+          this.setState({ 
+            selectedPerformance: performance
+          });
+        }
+      })
+      .catch(err => {
+        console.log('Error in grabbing selected Performance', err);
+      });
+    } else {
+      this.setState({ selectedPerformance: {}  });
+    }
   }
-
-  // selectPerformance = (id) => {
-  //   const tempPerformances = this.state.selectedShow.performances.slice();
-  //   const index = tempPerformances.findIndex(performance => performance.id === id);
-  //   if (index !== -1 ) {
-  //     httpRequest.fetchJSON(`${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${id}`, 'GET')
-  //     .then(response => {
-  //       const performance = JSON.parse(response);
-  //       this.setState({ 
-  //         selectedPerformance: performance
-  //       });
-  //     })
-  //     .catch(err => {
-  //       console.log('Error in grabbing selected Performance', err);
-  //     })
-  //   } else {
-  //     this.setState({ selectedPerformance: {} });
-  //   }
-  // }
 
   render() {
     const { venues, selectedCustomer } = this.props;
     const { selectedVenue, selectedShow, selectedLevel, selectedPerformance } = this.state;
+
+    const venuesVisible = Object.keys(selectedCustomer).length !== 0;
+    const showsVisible = venuesVisible && Object.keys(selectedVenue).length !== 0;
+    const levelsVisible = showsVisible && Object.keys(selectedShow).length !== 0;
+    const performancesVisible = levelsVisible && Object.keys(selectedLevel).length !== 0;
+    const seatsVisible = performancesVisible && Object.keys(selectedPerformance).length !== 0;
+    
     return ( 
       <div style={ticketContainerStyle}>
         {
-          Object.keys(selectedCustomer).length !== 0 ?
+          venuesVisible ?
           <VenuesContainer venues={venues} selectedVenue={selectedVenue} selectVenue={this.selectVenue}/> : null
         }
         {
-          Object.keys(selectedVenue).length !== 0 ? 
+          showsVisible ? 
           <ShowsContainer shows={selectedVenue.shows} selectedShow={selectedShow} selectShow={this.selectShow} /> : null
         }
         {
-          Object.keys(selectedShow).length !== 0 ? 
+          levelsVisible ? 
           <LevelsContainer levels={selectedVenue.levels} selectedLevel={selectedLevel} selectLevel={this.selectLevel} /> : null
         }
         {
-          Object.keys(selectedShow).length !== 0 ? 
+          performancesVisible ? 
           <PerformancesContainer performances={selectedShow.performances} selectedPerformance={selectedPerformance} selectPerformance={this.selectPerformance} /> : null
+        }
+        {
+          seatsVisible ?
+          <SeatsContainer seatsAvailable={selectedPerformance.seatsAvailable}  /> : null
         }
       </div>
     )

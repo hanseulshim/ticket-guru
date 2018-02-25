@@ -33,7 +33,8 @@ const styles = {
   },
   sectionTitle: {
     margin: '0.5rem 0',
-    fontWeight: '600'
+    fontWeight: '600',
+    minHeight: '40px'
   },
   sectionContent: {
     margin: '1rem 0',

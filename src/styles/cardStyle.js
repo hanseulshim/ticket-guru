@@ -42,8 +42,19 @@ const styles = {
   },
   sectionURL: {
     margin: '1rem 0',
-    color: '#9068be',
+    color: '#3fb0ac',
     textDecoration: 'none'
+  },
+  level: {
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    item: {
+      flex: '1',
+      margin: '0 0.5rem',
+      minWidth: '100px'
+    }
   }
 }
 

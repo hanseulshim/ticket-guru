@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import 'bulma/css/bulma.css'
 import Header from './components/Header';
 import CustomerContainer from './components/CustomerContainer';
 import TicketContainer from './components/TicketContainer';

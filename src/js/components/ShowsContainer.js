@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import cardStyles from '../../styles/cardStyle';
-import styles from '../../styles/venuesContainerStyle';
+import styles from '../../styles/sectionContainerStyle';
 
 class ShowsContainer extends Component {
 
   createCards = (show, id) => {
-    const selected = this.props.selectedShowID === show.id;
+    const selected = Object.keys(this.props.selectedShow).length !== 0 && this.props.selectedShow.id === show.id;
     return (
       <Card style={selected ? cardStyles.selectedCard : cardStyles.card} key={id}>
         <CardContent>

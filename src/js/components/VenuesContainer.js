@@ -28,7 +28,7 @@ class VenuesContainer extends Component {
           </div>
         </CardContent>
         <CardActions>
-          <Button style={cardStyles.button} onClick={() => this.props.selectVenue(venue.id)} size="small">{`${selected ? 'Unselect Venue' : 'Select Venue'}`}</Button>
+          <Button variant="raised" style={cardStyles.button} onClick={() => this.props.selectVenue(venue.id)} size="small">{`${selected ? 'Unselect Venue' : 'Select Venue'}`}</Button>
         </CardActions>
       </Card>
     )

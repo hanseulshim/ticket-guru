@@ -2,11 +2,7 @@ const fetchJSON = (url, method, send) => {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
       request.onload = () => {
-        if (request.responseText === ''){
-          reject('No response');
-        } else {
-          resolve(request.responseText);
-        }
+        resolve(request.responseText);
       };
       request.onerror = err => {
         reject('Error grabbing objects');

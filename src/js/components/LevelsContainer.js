@@ -16,19 +16,19 @@ class LevelsContainer extends Component {
           </div>
           <div style={cardStyles.level.container}>
             <div style={cardStyles.level.item}>
-              <div style={cardStyles.sectionTitle}>Number of rows</div>
+              <div style={cardStyles.sectionTitleLevel}>Number of rows</div>
               <div style={cardStyles.sectionContent}>{level.numRows}</div>
             </div>
             <div style={cardStyles.level.item}>
-              <div style={cardStyles.sectionTitle}>Seats per Row</div>
+              <div style={cardStyles.sectionTitleLevel}>Seats per Row</div>
               <div style={cardStyles.sectionContent}>{level.seatsPerRow}</div>
             </div>
             <div style={cardStyles.level.item}>
-              <div style={cardStyles.sectionTitle}>Seating Capacity</div>
+              <div style={cardStyles.sectionTitleLevel}>Seating Capacity</div>
               <div style={cardStyles.sectionContent}>{level.seatingCapacity}</div>
             </div>
             <div style={cardStyles.level.item}>
-              <div style={cardStyles.sectionTitle}>Price</div>
+              <div style={cardStyles.sectionTitleLevel}>Price</div>
               <div style={cardStyles.sectionContent}>${level.price}</div>
             </div>
           </div>

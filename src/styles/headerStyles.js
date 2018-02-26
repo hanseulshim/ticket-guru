@@ -1,6 +1,5 @@
 const styles = {
   container: {
-    width: '100%',
     background: '#c0dfd9',
     padding: '1rem 1.5rem',
     boxSizing: 'border-box',

@@ -4,6 +4,8 @@ import ShowsContainer from './ShowsContainer';
 import PerformancesContainer from './PerformancesContainer';
 import LevelsContainer from './LevelsContainer';
 import SeatsContainer from './SeatsContainer';
+import ConfirmationDialog from './ConfirmationDialog';
+import FinalConfirmation from './FinalConfirmation';
 import config from '../config/config';
 import httpRequest from '../utils/httpRequest';
 import { ticketContainerStyle } from '../../styles/ticketContainerStyle';
@@ -15,7 +17,11 @@ class TicketContainer extends Component {
       selectedVenue: {},
       selectedShow: {},
       selectedLevel: {},
-      selectedPerformance: {}
+      selectedPerformance: {},
+      numSeats: 0,
+      openConfirm: false,
+      openFinal: false,
+      confirm: {}
     }
   }
 
@@ -129,9 +135,69 @@ class TicketContainer extends Component {
     }
   }
 
+  updateNumSeats = (evt) => {
+    this.setState({ numSeats: evt.target.value });
+  }
+
+  requestReservation = () => {
+    const url = `${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${this.state.selectedPerformance.id}/reservations`;
+    const reqObj = {
+      customer: {
+        email: this.props.selectedCustomer.email
+      },
+      seatRequests: [
+        {
+          level: {
+            name: this.state.selectedLevel.name
+          },
+          numSeats: this.state.numSeats
+        }
+      ]
+    }
+
+    httpRequest.fetchJSON(url, 'POST', reqObj)
+    .then(response => {
+      const result = JSON.parse(response);
+      this.handleOpen();
+      this.setState({ confirm: result });
+    })
+    .catch(err => {
+      console.log('Error with getting reservation response', err);
+    });
+  }
+
+  confirmRegistration = () => {
+    const url = `${config.venuesUrl}/${this.state.selectedVenue.id}/shows/${this.state.selectedShow.id}/performances/${this.state.selectedPerformance.id}/reservations/${this.state.confirm.id}/confirm`;
+    httpRequest.fetchJSON(url, 'POST')
+    .then(() => {
+      window.location.reload();
+    })
+    .catch(err => {
+      console.log('Error with confirming registration', err);
+    });
+  }
+
+  handleOpen = () => {
+    this.setState({ openConfirm: true });
+  }
+
+  handleClose = () => {
+    this.setState({ 
+      openConfirm: false,
+      openFinal: false
+    });
+  }
+
+  handleConfirm = () => {
+    this.setState({ 
+      openConfirm: false,
+      openFinal: true
+    })
+  }
+
   render() {
     const { venues, selectedCustomer } = this.props;
-    const { selectedVenue, selectedShow, selectedLevel, selectedPerformance } = this.state;
+    const { selectedVenue, selectedShow, selectedLevel, selectedPerformance, numSeats, openConfirm, confirm, openFinal } = this.state;
 
     const venuesVisible = Object.keys(selectedCustomer).length !== 0;
     const showsVisible = venuesVisible && Object.keys(selectedVenue).length !== 0;
@@ -159,7 +225,34 @@ class TicketContainer extends Component {
         }
         {
           seatsVisible ?
-          <SeatsContainer seatsAvailable={selectedPerformance.seatsAvailable}  /> : null
+          <SeatsContainer seatsAvailable={selectedPerformance.seatsAvailable} numSeats={numSeats} updateNumSeats={this.updateNumSeats} requestReservation={this.requestReservation} /> : null
+        }
+        {
+          openConfirm ?
+          <ConfirmationDialog 
+            openConfirm={openConfirm}
+            handleClose={this.handleClose}
+            handleConfirm={this.handleConfirm}
+            selectedCustomer={selectedCustomer}
+            selectedVenue={selectedVenue}
+            selectedShow={selectedShow}
+            selectedLevel={selectedLevel}
+            selectedPerformance={selectedPerformance}
+            confirm={confirm}
+          /> : null
+        }
+        {
+          openFinal ?
+          <FinalConfirmation 
+            openFinal={openFinal}
+            confirmRegistration={this.confirmRegistration}
+            selectedCustomer={selectedCustomer}
+            selectedVenue={selectedVenue}
+            selectedShow={selectedShow}
+            selectedLevel={selectedLevel}
+            selectedPerformance={selectedPerformance}
+            confirm={confirm}
+          /> : null
         }
       </div>
     )

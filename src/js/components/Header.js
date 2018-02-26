@@ -11,8 +11,8 @@ class Header extends Component {
     return ( 
       <div style={styles.container}>
         <div>
-          <h1 style={styles.title}>Ticket Guru!</h1>
-          <h2 style={styles.subtitle}>Select a venue below or search for it on the right</h2>
+          <h1 style={styles.title}>Ticket Guru</h1>
+          <h2 style={styles.subtitle}>Reserve a show using the options below!</h2>
         </div>
         <TextField
           className="search-bar"
